@@ -1,5 +1,6 @@
 class cardMatch {
 
+
     constructor(deckSize = 20) {
         deckSize % 2 == 0
             ? this.nextDeckSize = deckSize
@@ -7,65 +8,84 @@ class cardMatch {
         this.selection1 = null //index of the card in the cards array
         this.selection2 = null
         this.cards = []
+        this.errors = 0
+        this.gameOver = false
     }
 
-    gameInit() { }
-
-    changeDeckSize(cards) {
-        nextDeckSize = cards
+    getDeck() {
+        return this.cards
+    }
+    gameInit() {
+        this.getRandomCards()
+        this.shuffleCards()
     }
 
-    getRandomCards(deckSize) { //! need to implement the API required to return an array of random cards
+    changeDeckSize(deckSize) {
+        nextDeckSize = deckSize
+    }
+
+    getRandomCards() {
         //? Return an array of random cards containing pairs of each card
-        const randomCards = []
-        for (let i = 0; i < deckSize; i++) {
-            value = Math.floor(Math.random() * deckSize)
-            randomCards.push(new Card(value, "��"))
-            randomCards.push(new Card(value, "��"))
+        let randomCards = []
+        let value
+        for (let i = 1; i <= this.nextDeckSize / 2; i++) {
+            randomCards.push(new Card(i))
+            randomCards.push(new Card(i))
+        }
+        this.cards = randomCards
+    }
+
+    shuffleCards() {
+        for (let i = 0; i < this.cards.length; i++) {
+            const j = Math.floor(Math.random() * this.cards.length)
+            const temp = this.cards[i]
+            this.cards[i] = this.cards[j]
+            this.cards[j] = temp
         }
     }
 
-    shuffleCards() { }
-
-    selectCard(card) {
+    selectCard(card, index) {
         card.select()
         if (this.selection1 == null)
-            this.selection1 = card
-        else if (this.selection2 == null)
-            this.selection2 = card
+            this.selection1 = index
+        else if (this.selection2 == null && index !== this.selection1)
+            this.selection2 = index
     }
 
     getCards = () => this.cards
 
-    gameReset() {
-        //? Reset the game parameters
-        this.cards = this.getRandomCards(this.nextDeckSize)
+    gameReset() {        //? Reset the game parameters
+        this.shuffleCards()
+        this.errors = 0
     }
     checkStatus() {
         if (this.selection1 === null || this.selection2 === null) {
             return false
         }
 
-        if (this.selection1.getValue() !== this.selection2.getValue()) {
+        if (this.cards[this.selection1].getValue() !== this.cards[this.selection2].getValue()) {
             this.cards[this.selection1].unselect()
             this.cards[this.selection2].unselect()
+            this.errors++
+            this.selection1 = null
+            this.selection2 = null
             return false
         }
 
-        this.cards[this.selection1].unselect()
-        this.cards[this.selection2].unselect()
         this.cards[this.selection1].match()
         this.cards[this.selection2].match()
+        this.selection1 = null
+        this.selection2 = null
         return true
     }
 
     isGameOver() { }
+
 }
 
 class Card {
-    constructor(value, suit) {
+    constructor(value) {
         this.value = value
-        this.suit = suit
         this.selected = false
         this.matched = false
     }
@@ -83,4 +103,7 @@ class Card {
     }
     getValue() { return this.value }
 
+    isSelected() { return this.selected }
+
+    isMatched() { return this.matched }
 }
