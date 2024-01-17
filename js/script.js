@@ -1,34 +1,50 @@
 //setup section
 let game = new cardMatch(20)
-const 
+let loading = false
 //helper section
-
 
 gameReset = () => {
     game.gameReset()
+    boardReset()
     draw(game.getCards())
+
 }
 
-selectCard = (card, index) => {
-    game.selectCard(card,index)
+selectCard = (index) => {
+    game.selectCard(index)
     game.checkStatus()
     draw(game.getCards())
     game.isGameOver()
-    ? gameOver()
-    : ''
+        ? gameOver()
+        : ''
 }
-gameInit = () => {
+gameInit = async () => {
     game.gameInit()
-    boardInit(game.getDeck(), selectCard)
+    await boardInit(game.getDeck(), selectCard)
     draw(game.getCards())
     reveal()
 }
+
+loader = (status) => {
+    console.log("loading:", status)
+    loading = status
+}
 //game section
+start = async () => {
+    loader(true)
+    await gameInit()
+    Promise.all(
+        Array.from(document.images)
+            .filter(img => !img.complete)
+            .map(img => new Promise(resolve => { img.onload = img.onerror = resolve; }))
+    )
+        .then(() => {
+            loader(false)
+        });
 
-gameInit()
+}
 
-
-
+start()
 
 
 //assignment section

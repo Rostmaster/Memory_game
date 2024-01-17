@@ -9,6 +9,9 @@ class cardMatch {
         this.selection2 = null
         this.cards = []
         this.errors = 0
+        this.maxErrors = -1
+        this.pairsToFind = this.nextDeckSize / 2
+        this.errorMessage = ''
         this.gameOver = false
     }
 
@@ -44,12 +47,15 @@ class cardMatch {
         }
     }
 
-    selectCard(card, index) {
-        card.select()
-        if (this.selection1 == null)
-            this.selection1 = index
-        else if (this.selection2 == null && index !== this.selection1)
-            this.selection2 = index
+    selectCard(index) {
+        try {                                                 //! remove the try/catch block and fix the error
+            this.cards[index].select()
+            if (this.selection1 == null)
+                this.selection1 = index
+            else if (this.selection2 == null && index !== this.selection1)
+                this.selection2 = index
+        } catch (error) {}
+
     }
 
     getCards = () => this.cards
@@ -74,12 +80,26 @@ class cardMatch {
 
         this.cards[this.selection1].match()
         this.cards[this.selection2].match()
+        this.pairsToFind--
         this.selection1 = null
         this.selection2 = null
         return true
     }
 
-    isGameOver() { }
+    isGameOver() {
+        if (this.errors === this.maxErrors) {
+            this.gameOver = true
+            this.errorMessage = 'Too many errors!'
+            return true
+        }
+
+        if (this.pairsToFind === 0) {
+            this.gameOver = true
+            this.errorMessage = 'All pairs are cleared!'
+            return true
+        }
+        return false
+    }
 
 }
 

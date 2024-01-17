@@ -41,7 +41,7 @@
   transition: border .2s ease;
 }
 
-.card:hover{
+.card:not(.match):hover{
   border: 2px solid red;
   transition: border .2s ease;
   cursor: pointer;
