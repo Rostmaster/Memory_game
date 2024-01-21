@@ -14,6 +14,8 @@ class cardMatch {
         this.errorMessage = ''
         this.gameOver = false
     }
+    
+    getCards = () => this.cards
 
     getDeck() {
         return this.cards
@@ -47,7 +49,9 @@ class cardMatch {
         }
     }
 
-    selectCard(index) {
+    selectCard(gridIndex) {
+        if (this.gameOver) return false
+        let index = gridIndex - 1
         try {                                                 //! remove the try/catch block and fix the error
             this.cards[index].select()
             if (this.selection1 == null)
@@ -56,9 +60,9 @@ class cardMatch {
                 this.selection2 = index
         } catch (error) {}
 
-    }
+        return true
 
-    getCards = () => this.cards
+    }
 
     gameReset() {        //? Reset the game parameters
         this.shuffleCards()
@@ -73,6 +77,7 @@ class cardMatch {
             this.cards[this.selection1].unselect()
             this.cards[this.selection2].unselect()
             this.errors++
+            console.log("errors: ",this.errors,'max errors: ',this.maxErrors)
             this.selection1 = null
             this.selection2 = null
             return false

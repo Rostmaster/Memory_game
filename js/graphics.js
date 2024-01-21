@@ -10,12 +10,13 @@ let revealTime = 2
 
 draw = (cards) => {
     cardElements.forEach((card, i) => {
-        cards[i].isSelected()
-            ? card.classList.add('show')
-            : card.classList.remove('show')
         cards[i].isMatched()
             ? card.classList.add('match')
             : ''
+        cards[i].isSelected()
+            ? card.classList.add('show')
+            : setTimeout(() => { card.classList.remove('show') }, 1000);
+
     })
 }
 
@@ -23,9 +24,8 @@ draw = (cards) => {
 let suitsInit = async () => {//! API REQUIRED to work according to the task
     for (let i = 0; i < deckSize / 2; i++) {
 
-        // let suit = await getHarryImage()
-        let suit = await getDogImage()
-        // let suit = await getCountryFlag()
+        let suit = await getHarryImage()
+        // let suit = await g?etDogImage()
 
         suits.push(suit)
     }
@@ -36,29 +36,57 @@ boardInit = async (cards) => {
     deckSize = cards.length
     await suitsInit()
 
+    //
+    /*Cell structure:
+        <div class="cell">
+            <div class="card">
+            <div class="front"></div>
+            <div class="back"><img></div>
+        </div>
+    */
     for (let i = 0; i < deckSize; i++) {
+        const cardWrapper = document.createElement('div')
+        cardWrapper.id = i + 1
+        cardWrapper.classList.add('card-wrapper')
+
         const card = document.createElement('div')
         card.classList.add('card')
-        card.id = i + 1
-        // card.innerHTML = cards[i].getValue()
-        img = document.createElement('img')
+        cardWrapper.appendChild(card)
+
+        let front = document.createElement('div')
+        front.classList.add('front')
+        card.appendChild(front)
+
+        let back = document.createElement('div')
+        back.classList.add('back')
+        card.appendChild(back)
+
+        let imgWrapper = document.createElement('div')
+        imgWrapper.classList.add('img-wrapper')
+        back.appendChild(imgWrapper)
+
+        let img = document.createElement('img')
         let suit = cards[i].getValue() - 1
-
+        img.classList.add('card-img')
         img.src = suits[suit]
+        imgWrapper.appendChild(img)
 
-        img.addEventListener('click', (e) => {//! put in dedicated function
-            //get parent element 
-            parent = e.target.parentElement
-            selectCard(parseInt(parent.id) - 1)
-        })
-        card.appendChild(img)
-        board.appendChild(card)
-        cardElements.push(card)
+        board.appendChild(cardWrapper)
+        cardElements.push(cardWrapper)
     }
-
-    addListeners()
+    //Click processing
+    addEventListeners()
 }
 
+addEventListeners = () => {
+    cardElements.forEach((card, i) => {
+        card.addEventListener('click', (e) => {
+            if (e.target.classList.contains('front')) {
+                selectCard(card.id)
+            }
+        })
+    })
+}
 boardReset = async (cards) => {
     if (cards.length === deckSize) {
         await suitsInit()
@@ -70,15 +98,6 @@ boardReset = async (cards) => {
     }
 
     await suitsInit()
-}
-addListeners = () => {
-    let cards = document.querySelectorAll('.card')
-    cards.forEach((card) => {
-        card.addEventListener('click', (e) => {
-            selectCard(parseInt(e.target.id) - 1)
-        })
-
-    })
 }
 addImageSource = () => { }
 
@@ -97,3 +116,10 @@ reveal = () => {
     }
 }
 
+showLoader = (loader) => {
+    loader.style.display = 'block'
+}
+
+hideLoader = (loader) => {
+    loader.style.display = 'none'
+}

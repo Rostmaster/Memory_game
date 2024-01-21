@@ -1,6 +1,6 @@
 //setup section
 let game = new cardMatch(20)
-let loading = false
+let loaderElement = document.querySelector('.loader')
 //helper section
 
 gameReset = () => {
@@ -12,11 +12,16 @@ gameReset = () => {
 
 selectCard = (index) => {
     game.selectCard(index)
+    draw(game.getCards())
     game.checkStatus()
     draw(game.getCards())
     game.isGameOver()
         ? gameOver()
         : ''
+}
+
+gameOver = () => {
+    alert(game.errorMessage)
 }
 gameInit = async () => {
     game.gameInit()
@@ -27,7 +32,7 @@ gameInit = async () => {
 
 loader = (status) => {
     console.log("loading:", status)
-    loading = status
+    status? showLoader(loaderElement): hideLoader(loaderElement)
 }
 //game section
 start = async () => {

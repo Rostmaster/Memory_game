@@ -2,7 +2,7 @@ let offsets = []
 
 let getHarryImage = async () => {
   let offset = 0
-  while (offsets.includes(offset)) offset = Math.floor(Math.random() * 20)
+  while (offsets.includes(offset)) offset = Math.floor(Math.random() * 25)
   offsets.push(offset)
   let response = await fetch(`https://hp-api.onrender.com/api/characters/`, {
     mode: 'cors'

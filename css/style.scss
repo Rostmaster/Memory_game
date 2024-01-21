@@ -1,48 +1,174 @@
-*{
+$cell-size: 200px;
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-#game{
+#game {
   height: 100vh;
   width: 100%;
 }
 
-.card{
-  background-color: brown;
-  height: 200px;
-  width: 200px;
-  margin: 10px;
-  color: white;
-  text-align: center;
-  vertical-align: center;
-  
-  & img{
-    width: 100%;
-    height: 100%;
-  }
+// .card {
+//   height: 200px;
+//   width: 200px;
+//   margin: 10px;
+//   color: white;
+//   text-align: center;
+//   vertical-align: center;
+//   overflow: hidden;
+//   display: flex;
+//   align-items: start;
+//   justify-content: center;
+//   border-radius: 2px;
+//   background: repeating-linear-gradient(
+//     45deg,
+//     rgba(0, 0, 0, 0.05),
+//     rgba(0, 0, 0, 0.05) 10px,
+//     rgba(0, 0, 0, 0.1) 10px,
+//     rgba(0, 0, 0, 0.1) 20px
+//   );
 
+//   & img {
+//     width: clamp(100%, 20px, 20px);
+//   }
+// }
+
+section:not(#footer){
+  height: 100vh;
 }
-#game_board{
+
+#footer {
+  height: 10vh;
+  width: 100%;
+  background-color: rgb(65, 65, 65);
+}
+.playground {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#game_board {
   width: fit-content;
   display: grid;
+  gap: 2px;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(4, 1fr);
-
+}
+.grid_4x5 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
 }
 
-.show{
-  border: 5px solid black;
-  transition: border .2s ease;
+.grid_5x6 {
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 }
 
-.match{
-  border: 5px solid purple;
-  transition: border .2s ease;
+.grid_6x7 {
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(7, 1fr);
 }
 
-.card:not(.match):hover{
-  border: 2px solid red;
-  transition: border .2s ease;
-  cursor: pointer;
+.grid_7x8 {
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.grid_8x9 {
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(248, 118, 118, 0.8);
+  z-index: 1000;
+  display: block;
+  transition: all 0.2s ease;
+
+  & > .loader-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10vw;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+}
+.card-wrapper {
+
+  width: $cell-size;
+  height: $cell-size;
+  display: inline-block;
+  perspective: 1000px;
+
+  .card {
+    position: relative;
+    cursor: pointer;
+    transition-duration: 0.6s;
+    transition-timing-function: ease-in-out;
+    transform-style: preserve-3d;
+    .front,
+    .back {
+      border: 1px solid white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: url('https://plus.unsplash.com/premium_photo-1673481886908-6670fc5c87af?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODl8fHBhdHRlcm58ZW58MHx8MHx8fDA%3D');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: $cell-size;
+      backface-visibility: hidden;
+      transform: rotateX(0deg);
+    }
+    .back {
+      .img-wrapper {
+        & img {
+          width: $cell-size;
+          height: $cell-size;
+          object-fit: cover;
+          object-position: 0 0;
+        }
+      }
+    }
+
+    .front {
+      content:' ';
+      background-color: tan;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+  }
+
+  &,
+  &.flipped {
+    .card {
+      .back {
+        transform: rotateY(180deg);
+      }
+    }
+
+    &.show {
+      .card {
+        transform: rotateY(180deg);
+      }
+    }
+    &.match {
+      .card {
+        transform: rotateY(180deg);
+      }
+    }
+  }
 }

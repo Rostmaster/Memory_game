@@ -9,40 +9,128 @@
   width: 100%;
 }
 
-.card {
-  background-color: brown;
-  height: 200px;
-  width: 200px;
-  margin: 10px;
-  color: white;
-  text-align: center;
-  vertical-align: center;
+section:not(#footer) {
+  height: 100vh;
 }
-.card img {
+
+#footer {
+  height: 10vh;
   width: 100%;
-  height: 100%;
+  background-color: rgb(65, 65, 65);
+}
+
+.playground {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #game_board {
   width: -moz-fit-content;
   width: fit-content;
   display: grid;
+  gap: 2px;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(4, 1fr);
 }
 
-.show {
-  border: 5px solid black;
-  transition: border 0.2s ease;
+.grid_4x5 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
 }
 
-.match {
-  border: 5px solid purple;
-  transition: border 0.2s ease;
+.grid_5x6 {
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 }
 
-.card:not(.match):hover {
-  border: 2px solid red;
-  transition: border 0.2s ease;
+.grid_6x7 {
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+}
+
+.grid_7x8 {
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.grid_8x9 {
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(248, 118, 118, 0.8);
+  z-index: 1000;
+  display: block;
+  transition: all 0.2s ease;
+}
+.loader > .loader-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10vw;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.card-wrapper {
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  perspective: 1000px;
+}
+.card-wrapper .card {
+  position: relative;
   cursor: pointer;
+  transition-duration: 0.6s;
+  transition-timing-function: ease-in-out;
+  transform-style: preserve-3d;
+}
+.card-wrapper .card .front,
+.card-wrapper .card .back {
+  border: 1px solid white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: url("https://plus.unsplash.com/premium_photo-1673481886908-6670fc5c87af?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODl8fHBhdHRlcm58ZW58MHx8MHx8fDA%3D");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200px;
+  backface-visibility: hidden;
+  transform: rotateX(0deg);
+}
+.card-wrapper .card .back .img-wrapper img {
+  width: 200px;
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: 0 0;
+     object-position: 0 0;
+}
+.card-wrapper .card .front {
+  content: " ";
+  background-color: tan;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.card-wrapper .card .back, .card-wrapper.flipped .card .back {
+  transform: rotateY(180deg);
+}
+.card-wrapper.show .card, .card-wrapper.flipped.show .card {
+  transform: rotateY(180deg);
+}
+.card-wrapper.match .card, .card-wrapper.flipped.match .card {
+  transform: rotateY(180deg);
 }/*# sourceMappingURL=style.css.map */
